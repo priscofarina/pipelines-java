@@ -1,6 +1,26 @@
-- uses: Azure/pipelines@v1
-  with:
-    azure-devops-project-url: 'https://dev.azure.com/priscofarina/Space%20Game'
-    azure-pipeline-name: 'github-build-contribution' # name of the Azure pipeline to be triggered
-    azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN }}'
-    #azure-pipeline-variables:  '{"variable1": "value1", "variable2": "value2"}' # optional stringified json
+name: workflow 
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ main ]
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    
+    steps:
+    - name: 'Trigger an Azure Pipeline to check if PR can be merged'
+      uses: Azure/pipelines@v1
+      with:
+        azure-devops-project-url: 'https://dev.azure.com/priscofarina/Space%20Game'
+        azure-pipeline-name: 'github-build-contribution' # name of the Azure pipeline to be triggered
+        azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN }}'
+        #azure-pipeline-variables:  '{"variable1": "value1", "variable2": "value2"}' # optional stringified json
+      
