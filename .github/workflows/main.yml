@@ -17,10 +17,14 @@ jobs:
     
     steps:
     - name: 'Trigger an Azure Pipeline to check if PR can be merged'
+      id: azure-test
       uses: Azure/pipelines@v1
       with:
         azure-devops-project-url: 'https://dev.azure.com/priscofarina/Space%20Game'
         azure-pipeline-name: 'github-build-contribution' # name of the Azure pipeline to be triggered
         azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN }}'
         #azure-pipeline-variables:  '{"variable1": "value1", "variable2": "value2"}' # optional stringified json
-      
+    - name: Check results
+      if: steps.azure-test.outcome=='failure'
+      run: |
+        exit 1       
